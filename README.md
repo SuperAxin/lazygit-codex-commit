@@ -27,26 +27,12 @@ sudo pacman -S --needed lazygit
 lazygit --version
 ```
 
-### 2. 安裝 Node.js 與 npm
-
-Codex CLI 可以透過 npm 安裝，因此需要 Node.js 與 npm。
-
-```bash
-sudo pacman -S --needed nodejs npm
-```
-
-確認安裝版本：
-
-```bash
-node --version
-npm --version
-```
-
-### 3. 安裝 OpenAI Codex CLI
+### 2. 安裝 OpenAI Codex CLI
 
 使用 npm 全域安裝：
 
 ```bash
+
 npm install -g @openai/codex
 ```
 
@@ -60,25 +46,13 @@ codex --version
 
 Codex CLI 支援透過 ChatGPT 帳號登入。
 
-### 方法一：瀏覽器登入（本機環境）
-
-在具有瀏覽器的電腦執行：
-
 ```bash
+// 在具有瀏覽器的電腦執行：
 codex login
-```
 
-依照終端機提示完成 ChatGPT 帳號登入。
-
-### 方法二：Device Authentication（SSH 遠端環境）
-
-如果透過 SSH 連線至 CachyOS，無法直接使用遠端電腦的瀏覽器，可以使用裝置授權流程：
-
-```bash
+// 如果透過 SSH 連線至 CachyOS，無法直接使用遠端電腦的瀏覽器，可以使用裝置授權流程：
 codex login --device-auth
 ```
-
-依照終端機顯示的網址與驗證碼，在本機瀏覽器完成登入。
 
 ### 確認登入狀態
 
