@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# 確認目前位於 Git Repository
+git rev-parse --is-inside-work-tree >/dev/null
+
+# 確認有已 Stage 的修改
+if git diff --cached --quiet; then
+  echo "沒有 Staged Changes，請先在 LazyGit Stage 檔案。"
+  exit 1
+fi
+
+# 確認 Codex CLI 可用
+if ! command -v codex >/dev/null 2>&1; then
+  echo "找不到 codex CLI，請先安裝並登入。"
+  exit 1
+fi
+
+# 建立暫存 Commit Message
+msg_file=$(mktemp)
+trap 'rm -f "$msg_file"' EXIT
+
+echo "正在使用 Codex 產生 Commit Message..."
+
+# Codex 只分析 Staged Diff，不允許修改檔案
+git diff --cached --no-ext-diff --no-color |
+  codex exec \
+    --sandbox read-only \
+    --ephemeral \
+    --output-last-message "$msg_file" \
+    "Read the staged Git diff from standard input and generate a concise English Conventional Commit message.
+
+Rules:
+- Use feat, fix, refactor, docs, test, chore, or perf.
+- Format: type(scope): description.
+- Keep the first line under 72 characters.
+- Output only the commit message.
+- Do not use Markdown or code fences.
+- Do not modify files or run Git commands."
+
+# 檢查產生結果
+if [[ ! -s "$msg_file" ]]; then
+  echo "Codex 沒有產生 Commit Message。"
+  exit 1
+fi
+
+echo
+echo "AI 產生的 Commit Message："
+cat "$msg_file"
+echo
+
+# 開啟 Neovim 供使用者確認或修改
+GIT_EDITOR=nvim git commit --edit --file="$msg_file"

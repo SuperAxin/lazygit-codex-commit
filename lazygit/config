@@ -1,0 +1,6 @@
+customCommands:
+  - key: "<c-a>"
+    context: "files"
+    description: "Generate Commit Message with Codex"
+    command: "bash ~/.config/nvim/scripts/codex-commit"
+    output: terminal
